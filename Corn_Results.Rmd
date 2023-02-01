@@ -1,0 +1,74 @@
+---
+title: "R Notebook"
+output:
+  html_document:
+    df_print: paged
+---
+
+Analysis of Dudley corn leaf tissue with and without mucilage traits flagged in August of 2021 at Grow Hub. 
+
+```{r loading data packages etc, echo = F, include = F}
+
+library(dplyr); library(ggplot2); library(lme4)
+corn <- read.csv("MucilageCorn_Results.csv")
+colnames(corn)[5:8] <- c("d15N", "d13C", "centN", "centC")
+corn <- corn[1:28,]
+
+Samples2include <- levels(as.factor(corn$Sample))[2:5]
+corn2 <- corn[which(corn$Sample %in% Samples2include),]
+
+
+library(tidyr)
+
+
+```
+
+First, we want to compare the distribution of 15N signature across corn with and without mucilage, and compared to adjacent squash (non N-fixing) and a Cassia spp. legume (N fixing, verified nodules). 
+
+```{r graphs, echo = F}
+
+library(cowplot)
+
+d13C_plot <- corn2 %>% 
+  ggplot(aes(x=Sample,y=d13C)) + 
+  geom_point(size = 1.5,position = "jitter") + 
+  theme_bw(base_size=16) +
+  xlab("")
+
+d15N_plot <- corn2 %>% 
+  ggplot(aes(x=Sample,y=d15N)) + 
+  geom_point(size = 1.5,position = "jitter") + 
+  theme_bw(base_size=16)+
+  xlab("")
+
+centC_plot <- corn2 %>% 
+  ggplot(aes(x=Sample,y=centC)) + 
+  geom_point(size = 1.5,position = "jitter") + 
+  theme_bw(base_size=16)+
+  xlab("")
+
+centN_plot <- corn2 %>% 
+  ggplot(aes(x=Sample,y=centN)) + 
+  geom_point(size = 1.5,position = "jitter") + 
+  theme_bw(base_size=16)+
+  xlab("")
+  
+plot_grid(d13C_plot, d15N_plot, centC_plot, centN_plot)
+
+
+
+
+```
+
+All in all, not exactly what I expected. The corn is more depleted than the squash. All of this is perhaps consistent with a greater manure application? However, it does not provide any evidence of fixation that is for sure. 
+
+The variation between the mucilage and no mucilage corn is intriguing. I am, however, worried about possible sample contamination. I pooled samples for this quick analysis, and it is possible that during grinding there was some cross-contamination. On the other hand, the %N results are not consistent with this possibility. 
+
+
+
+
+
+
+
+
+
